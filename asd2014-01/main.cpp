@@ -42,18 +42,20 @@ void leggiGrafo()
     grafo.resize(n);
     
     // Cicla sul numero di archi, importa il grafo
+    //cout << n << " " << m; //DEBUG
     for (int i = 0; i < m; i++)
     {
         int from, to;
         f >> from >> to;
         grafo[from].adiacenti.push_back(to);
         grafo[to].archiEntranti++;
+        
+        cout << "from: " << from << "   to: "<< to << endl;
     }
     
     f.close();
 }
 
-// 
 void ordineTopologico()
 {
     // Inizializza il file di output e il vettore dei consiglieri 
@@ -103,7 +105,7 @@ void ordineTopologico()
         {
             //cout << "i -- grafo[i], adiacenti[j]: " << i << " -- " << grafo[i].adiacenti[j] << endl; //DEBUG
 
-            // Se il j-esimo vicino non è ancora stato visitato, lo mette in pila
+            // Se il j-esimo vicino non è ancora stato visitato, è un sottoposto di i
             if (!grafo[j].visitato)
             {
                 // Scrive la riga del tipo "il generale i-esimo comanda il vicino j-esimo"
@@ -130,7 +132,7 @@ void ordineTopologico()
                         {
                             // cout << "k -- grafo[k], adiacenti[w]: " << k << " -- " << grafo[k].adiacenti[w] << endl; //DEBUG
                             // Se l'adiacente non è già stato visitato
-                            if(!grafo[w].visitato)
+                            if(!grafo[grafo[k].adiacenti[w]].visitato)
                             {
                                 // Impila per l'esplorazione e scrive in output "Il vicino k comanda w"
                                 esplora.push(grafo[k].adiacenti[w]);
