@@ -1,4 +1,0 @@
---- COSE DA FARE ---
-
-L - Guerrieri ha detto che non pubblica i sorgenti di lab4, e che ci serviranno sia l'algoritmo delle componenti connesse che quello del percorso massimo (esercizi 1 e 3)
-L - http://try.github.com/
