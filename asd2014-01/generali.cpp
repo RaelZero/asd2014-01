@@ -27,14 +27,14 @@ vector<node> grafo;     // grafo di input
 stack<int> consiglieri;
 stack<int> esplora;
 int numeroConsiglieri = 0;
-ofstream f("/home/giorgio/NetBeansProjects/asd2014-01/asd2014-01/asd2014-01/DatasetP1/output.txt");
+ofstream f("output.txt");
     
 
 // Importa il grafo
 void leggiGrafo()
 {
     // Importa il numero di nodi e archi
-    ifstream f("/home/giorgio/NetBeansProjects/asd2014-01/asd2014-01/asd2014-01/DatasetP1/input0.txt");
+    ifstream f("input.txt");
     f >> n >> m;
     grafo.resize(n);
     
@@ -58,8 +58,7 @@ void ordineTopologico(int nodo)
         grafo[nodo].visitato = true;
         for (int i = 0; i < grafo[nodo].adiacenti.size(); i++)
         {
-            cout << "nodo: " << nodo << " i: " << grafo[nodo].adiacenti[i] << "\n";
-            esplora.push(grafo[nodo].adiacenti[i]);
+            //cout << "nodo: " << nodo << " i: " << grafo[nodo].adiacenti[i] << "\n"; //DEBUG
             if(!grafo[grafo[nodo].adiacenti[i]].visitato)
             {
                 f << nodo << " " << grafo[nodo].adiacenti[i] << endl;
@@ -73,8 +72,6 @@ int main(int argc, char** argv)
 {
     leggiGrafo();
     
-    // Inizializza il file di output e il vettore dei consiglieri 
-
     vector<int> outputCons;
     
     // Cicla su tutti i nodi
@@ -104,16 +101,10 @@ int main(int argc, char** argv)
     while (!consiglieri.empty())
     {
         ordineTopologico(consiglieri.top());
-        cout << "---\n";
+        //cout << "---\n"; //DEBUG
         consiglieri.pop();
     }
     
-    
-    while(!esplora.empty())
-    {
-        cout << esplora.top();
-        esplora.pop();
-    }
     return 0;
 }
 
