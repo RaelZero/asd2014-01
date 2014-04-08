@@ -35,9 +35,11 @@ int numeroConsiglieri = 0;
 
 void leggiGrafo()
 {
-    ifstream f("/home/giorgio/NetBeansProjects/asd2014-01/asd2014-01/asd2014-01/DatasetP1/input1.txt");
+    ifstream f("/home/giorgio/NetBeansProjects/asd2014-01/asd2014-01/asd2014-01/DatasetP1/input5.txt");
     f >> n >> m;
     grafo.resize(n);
+    
+    cout << n << " " << m;
     
     for (int i = 0; i < m; i++)
     {
@@ -45,6 +47,8 @@ void leggiGrafo()
         f >> from >> to;
         grafo[from].adiacenti.push_back(to);
         grafo[to].archiEntranti++;
+        
+        cout << "from: " << from << "   to: "<< to << endl;
     }
     
     f.close();
@@ -69,7 +73,7 @@ void ordineTopologico()
     stack<int> esplora;
     int i;
     
-    //cout << "numero consiglieri: " << numeroConsiglieri << endl;
+    cout << "numero consiglieri: " << numeroConsiglieri << endl;
     f << numeroConsiglieri << endl;
     
     for (int g = 0; g < outputCons.size(); g++)
@@ -82,17 +86,17 @@ void ordineTopologico()
     {
         i = consiglieri.top();
         
-        //cout << "consigliere: " << i << endl;
+        cout << "consigliere: " << i << endl;
         consiglieri.pop();
         grafo[i].visitato = true;
         
         for (int j = 0; j < grafo[i].adiacenti.size(); j++)
         {
             //cout << "i -- grafo[i], adiacenti[j]: " << i << " -- " << grafo[i].adiacenti[j] << endl;
-            if (!grafo[j].visitato)
+            if (!grafo[grafo[i].adiacenti[j]].visitato)
                 {
                 f << i << " " << grafo[i].adiacenti[j] << endl;
-
+                
                 esplora.push(grafo[i].adiacenti[j]);
                 while(!esplora.empty())
                 {
@@ -103,8 +107,8 @@ void ordineTopologico()
                         grafo[k].visitato = true;
                         for (int w = 0; w < grafo[k].adiacenti.size(); w++)
                         {
-                            // cout << "k -- grafo[k], adiacenti[w]: " << k << " -- " << grafo[k].adiacenti[w] << endl;
-                            if(!grafo[w].visitato)
+                            //cout << "k -- grafo[k], adiacenti[w]: " << k << " -- " << grafo[k].adiacenti[w] << endl;
+                            if(!grafo[grafo[k].adiacenti[w]].visitato)
                             {
                                 f << k << " " << grafo[k].adiacenti[w] << endl;
                                 esplora.push(grafo[k].adiacenti[w]);
