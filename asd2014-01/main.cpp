@@ -7,7 +7,6 @@
 
 #include <iostream>
 #include <fstream>
-
 #include <vector>
 #include <cstring>
 #include <stack>
@@ -21,10 +20,6 @@ struct node
     bool visitato = false;
 };
 
-
-/*
- * 
- */
 
 int n = 0;              // numero di nodi
 int m = 0;              // numero di archi
