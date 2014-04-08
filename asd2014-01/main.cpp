@@ -25,14 +25,16 @@ int n = 0;              // numero di nodi
 int m = 0;              // numero di archi
 vector<node> grafo;     // grafo di input
 stack<int> consiglieri;
+stack<int> esplora;
 int numeroConsiglieri = 0;
+ofstream f("/home/giorgio/NetBeansProjects/asd2014-01/asd2014-01/asd2014-01/DatasetP1/output.txt");
     
 
 // Importa il grafo
 void leggiGrafo()
 {
     // Importa il numero di nodi e archi
-    ifstream f("input.txt");
+    ifstream f("/home/giorgio/NetBeansProjects/asd2014-01/asd2014-01/asd2014-01/DatasetP1/input0.txt");
     f >> n >> m;
     grafo.resize(n);
     
@@ -44,17 +46,35 @@ void leggiGrafo()
         f >> from >> to;
         grafo[from].adiacenti.push_back(to);
         grafo[to].archiEntranti++;
-        
-        cout << "from: " << from << "   to: "<< to << endl;
     }
     
     f.close();
 }
 
-void ordineTopologico()
+void ordineTopologico(int nodo)
 {
+    if (!grafo[nodo].visitato)
+    {
+        grafo[nodo].visitato = true;
+        for (int i = 0; i < grafo[nodo].adiacenti.size(); i++)
+        {
+            cout << "nodo: " << nodo << " i: " << grafo[nodo].adiacenti[i] << "\n";
+            esplora.push(grafo[nodo].adiacenti[i]);
+            if(!grafo[grafo[nodo].adiacenti[i]].visitato)
+            {
+                f << nodo << " " << grafo[nodo].adiacenti[i] << endl;
+                ordineTopologico(grafo[nodo].adiacenti[i]);
+            }
+        }
+    }
+}
+
+int main(int argc, char** argv)
+{
+    leggiGrafo();
+    
     // Inizializza il file di output e il vettore dei consiglieri 
-    ofstream f("output.txt");
+
     vector<int> outputCons;
     
     // Cicla su tutti i nodi
@@ -65,13 +85,9 @@ void ordineTopologico()
         {
             consiglieri.push(i);
             outputCons.push_back(i);
+            numeroConsiglieri++;
         }
     }
-    
-    numeroConsiglieri = consiglieri.size();
-   
-    // Pila dei nodi da esplorare, come indici 
-    stack<int> esplora;
     
     //cout << "numero consiglieri: " << numeroConsiglieri << endl; //DEBUG
     // Scrive sul file di output il numero dei consiglieri
@@ -83,68 +99,21 @@ void ordineTopologico()
         f << outputCons[g] << " ";
     }
     f << endl;
-   
-    // Cicla sui consiglieri 
+    numeroConsiglieri = consiglieri.size();
+    
     while (!consiglieri.empty())
     {
-        // Setta i all'indice del consigliere
-        int i = consiglieri.top();
-        
-        // Estrae il consigliere i-esimo e lo flagga come visitato
-        //cout << "consigliere: " << i << endl; //DEBUG
+        ordineTopologico(consiglieri.top());
+        cout << "---\n";
         consiglieri.pop();
-        grafo[i].visitato = true;
-       
-        // Cicla su tutti gli adiacenti a quel consigliere 
-        for (int j = 0; j < grafo[i].adiacenti.size(); j++)
-        {
-            //cout << "i -- grafo[i], adiacenti[j]: " << i << " -- " << grafo[i].adiacenti[j] << endl; //DEBUG
-
-            // Se il j-esimo vicino non è ancora stato visitato, è un sottoposto di i
-            if (!grafo[j].visitato)
-            {
-                // Scrive la riga del tipo "il generale i-esimo comanda il vicino j-esimo"
-                f << i << " " << grafo[i].adiacenti[j] << endl;
-
-                // Impila il vicino j-esimo per l'esplorazione
-                esplora.push(grafo[i].adiacenti[j]);
-    
-                // Cicla finché la pila di esplorazione non è vuota
-                while(!esplora.empty())
-                {
-                    // Estrae il primo elemento dalla pila
-                    int k = esplora.top();
-                    esplora.pop();
-                
-                    // Se il nodo estratto non è già stato visitato
-                    if(!grafo[k].visitato)
-                    {
-                        // Flagga come visitato
-                        grafo[k].visitato = true;
-
-                        // Cicla sugli adiacenti a quel nodo
-                        for (int w = 0; w < grafo[k].adiacenti.size(); w++)
-                        {
-                            // cout << "k -- grafo[k], adiacenti[w]: " << k << " -- " << grafo[k].adiacenti[w] << endl; //DEBUG
-                            // Se l'adiacente non è già stato visitato
-                            if(!grafo[grafo[k].adiacenti[w]].visitato)
-                            {
-                                // Impila per l'esplorazione e scrive in output "Il vicino k comanda w"
-                                esplora.push(grafo[k].adiacenti[w]);
-                                f << k << " " << grafo[k].adiacenti[w] << endl;
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
-}
-
-int main(int argc, char** argv)
-{
-    leggiGrafo();
-    ordineTopologico();
+    
+    
+    while(!esplora.empty())
+    {
+        cout << esplora.top();
+        esplora.pop();
+    }
     return 0;
 }
 
