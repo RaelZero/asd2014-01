@@ -44,8 +44,16 @@ void tagliaCicli();
 int main(int argc, char** argv)
 {
     leggiGrafo();
-    cfc();
-    tagliaCicli();
+    cfc(); // DA DEBUGGARE, segfaulta
+    // tagliaCicli();
+    
+    /*
+    for (int i = 0; i < grafo.size(); i++)
+            cout << "Nodo: " << i << " CC: " << grafo[i].cfc << endl;
+    DEBUG */
+    
+    
+    /*
 
     // Vettore per l'output dei consiglieri
     vector<int> outputCons;
@@ -82,6 +90,8 @@ int main(int argc, char** argv)
         consiglieri.pop();
     }
     
+    */
+    
     return 0;
 }
 
@@ -89,7 +99,7 @@ int main(int argc, char** argv)
 void leggiGrafo()
 {
     // Importa il numero di nodi e archi
-    ifstream f("input.txt");
+    ifstream f("DatasetP1/input/input0.txt");
     f >> n >> m;
     grafo.resize(n);
     trasposto.resize(n);
@@ -204,16 +214,28 @@ void ordineTopologico(int nodo)
     }
 }
 
+// Taglia gli archi interni alla stessa CFC
 void tagliaCicli()
 {
+    // Cicla su tutti i nodi
     for (int i = 0; i < grafo.size(); i++)
     {
+        // Cicla sugli adiacenti al nodo i
         for (int j = 0; j < grafo[i].adiacenti.size(); j++)
         {
+            // Se il nodo i e il vicino j sono nella stessa CFC
             if (grafo[i].cfc == grafo[grafo[i].adiacenti[j]].cfc)
             {
+                // Riduci il numero di archi entranti
                 grafo[grafo[i].adiacenti[j]].archiEntranti--;
-                grafo[i].adiacenti.erase(j);
+                
+                // Sposta l'ultimo elemento del vettore dei vicini al posto del vicino j
+                grafo[i].adiacenti[grafo[i].adiacenti.size()-1] = grafo[i].adiacenti[j]; //SOSPETTO
+                // Elimina l'ultimo elemento
+                grafo[i].adiacenti.pop_back();
+                
+                // Correzione rispetto al fatto che è stato eliminato un elemento.
+                j--;
             }
         }
     }
