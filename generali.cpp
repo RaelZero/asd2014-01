@@ -13,6 +13,7 @@
 
 using namespace std;
 
+// Struttura di ogni singolo nodo
 struct node
 {
     vector<int> adiacenti;
@@ -21,12 +22,11 @@ struct node
 };
 
 
-int n = 0;              // numero di nodi
-int m = 0;              // numero di archi
-vector<node> grafo;     // grafo di input
-stack<int> consiglieri;
-stack<int> esplora;
-int numeroConsiglieri = 0;
+int n = 0;                  // numero di nodi
+int m = 0;                  // numero di archi
+vector<node> grafo;         // grafo di input
+stack<int> consiglieri;     // Vettore di consiglieri
+int numeroConsiglieri = 0;  // Numero di consiglieri
 ofstream f("output.txt");
     
 
@@ -38,8 +38,8 @@ void leggiGrafo()
     f >> n >> m;
     grafo.resize(n);
     
-    // Cicla sul numero di archi, importa il grafo
     //cout << n << " " << m; //DEBUG
+    // Cicla sul numero di archi importa il grafo, tracciando il numero di archi entranti per nodo
     for (int i = 0; i < m; i++)
     {
         int from, to;
@@ -98,6 +98,7 @@ int main(int argc, char** argv)
     f << endl;
     numeroConsiglieri = consiglieri.size();
     
+    // Cicla sul vettore dei consiglieri, estraendone uno alla volta, e inizia la visita a partire da loro
     while (!consiglieri.empty())
     {
         ordineTopologico(consiglieri.top());
