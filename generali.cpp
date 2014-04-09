@@ -19,7 +19,7 @@ struct node
     vector<int> adiacenti;
     int archiEntranti = 0;
     bool visitato = false;
-    int cfc = -1;
+    int cfc = -1;           // A quale CFC appartiene
 };
 
 
@@ -59,6 +59,41 @@ void leggiGrafo()
     
     f.close();
 }
+
+// Flagga ogni nodo con il numero della sua componente connessa
+void cfc()
+{
+    stack<int> s;
+
+    // Crea e inizializza l'array di appoggio per la visita delle CFC
+    vector<bool> v;
+    v.resize(n);
+    for(int i = 0; i < v.size(); i++)
+        v[i] = false;
+    
+    for(int i = 0; i < graph.size(); i++)
+    {
+        dfsStack(&s, i, &v);
+    }
+
+    // Da finire
+
+}
+
+// Funzione ausiliaria per caricare la pila di cfc()
+void dfsStack(stack<int> &s, int nodo, vector<bool> &v)
+{
+    for (int i = 0; i < ((grafo[nodo]).adiacenti[i]).size(); i++)
+    {
+        if(!v[((grafo[nodo]).adiacenti[i])])
+        {
+            dfsStack(&s, grafo[nodo].adiacenti[i], &v);
+        }
+    }
+    
+    s.push(nodo);
+}
+
 
 // Soluzione da 30 punti
 void ordineTopologico(int nodo)
