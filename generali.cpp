@@ -19,12 +19,14 @@ struct node
     vector<int> adiacenti;
     int archiEntranti = 0;
     bool visitato = false;
+    int cfc = -1;
 };
 
 
 int n = 0;                  // numero di nodi
 int m = 0;                  // numero di archi
 vector<node> grafo;         // grafo di input
+vector<node> trasposto;     // Grafo Trasposto
 stack<int> consiglieri;     // Vettore di consiglieri
 int numeroConsiglieri = 0;  // Numero di consiglieri
 ofstream f("output.txt");
@@ -37,6 +39,7 @@ void leggiGrafo()
     ifstream f("input.txt");
     f >> n >> m;
     grafo.resize(n);
+    trasposto.resize(n);
     
     //cout << n << " " << m; //DEBUG
     // Cicla sul numero di archi importa il grafo, tracciando il numero di archi entranti per nodo
@@ -44,13 +47,20 @@ void leggiGrafo()
     {
         int from, to;
         f >> from >> to;
+        
+        // Importa nel grafo
         grafo[from].adiacenti.push_back(to);
         grafo[to].archiEntranti++;
+        
+        // Importa nel grafo trasposto
+        trasposto[to].adiacenti.push_back(from);
+        trasposto[from].archiEntranti++;
     }
     
     f.close();
 }
 
+// Soluzione da 30 punti
 void ordineTopologico(int nodo)
 {
     if (!grafo[nodo].visitato)
@@ -72,8 +82,11 @@ int main(int argc, char** argv)
 {
     leggiGrafo();
     
+    cfc();
+
+    // Vettore per l'output dei consiglieri
     vector<int> outputCons;
-    
+
     // Cicla su tutti i nodi
     for (int i = 0; i < n; i++)
     {
@@ -84,7 +97,7 @@ int main(int argc, char** argv)
             outputCons.push_back(i);
             numeroConsiglieri++;
         }
-    }
+    }    
     
     //cout << "numero consiglieri: " << numeroConsiglieri << endl; //DEBUG
     // Scrive sul file di output il numero dei consiglieri
