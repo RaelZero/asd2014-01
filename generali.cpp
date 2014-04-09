@@ -206,7 +206,16 @@ void ordineTopologico(int nodo)
 
 void tagliaCicli()
 {
-
-
+    for (int i = 0; i < grafo.size(); i++)
+    {
+        for (int j = 0; j < grafo[i].adiacenti.size(); j++)
+        {
+            if (grafo[i].cfc == grafo[grafo[i].adiacenti[j]].cfc)
+            {
+                grafo[grafo[i].adiacenti[j]].archiEntranti--;
+                grafo[i].adiacenti.erase(j);
+            }
+        }
+    }
 }
 
