@@ -19,7 +19,7 @@ struct node
     vector<int> adiacenti;
     int archiEntranti = 0;
     bool visitato = false;
-    int cfc = -1;           // A quale CFC appartiene
+    int cfc = 0;           // A quale CFC appartiene
 };
 
 
@@ -76,8 +76,16 @@ void cfc()
         dfsStack(&s, i, &v);
     }
 
-    // Da finire
+    vector<int> ordine;
+    ordine.resize(n);
 
+    for(int i = 0; i < ordine.size(); i++)
+    {
+        ordine[i] = s.top();
+        s.pop();
+    }
+
+    cc(vector<int> &ordine);
 }
 
 // Funzione ausiliaria per caricare la pila di cfc()
@@ -92,6 +100,35 @@ void dfsStack(stack<int> &s, int nodo, vector<bool> &v)
     }
     
     s.push(nodo);
+}
+
+// Funzione per le componenti connesse
+void cc(vector<int> &v)
+{
+    int numComponente = 0;
+
+    for (int i = 0; i < v.size(); i++)
+    {
+        if (trasposto[i].cfc == 0)
+        {
+            numComponente++;
+            ccdfs(numComponente, i);
+    }
+}
+
+// Funzione ausiliaria per la ricerca delle componenti connesse
+void ccdfs(int componente, int i)
+{
+    grafo[i] = componente;
+    trasposto[i] = componente;
+    
+    for (int j = 0; j < trasposto[i].adiacenti.size())
+    {
+        if (trasposto[i].adiacente[j].cfc == 0)
+        {
+            ccdfs(componente, trasposto[i].adiacente[j]);
+        }
+    }
 }
 
 
@@ -113,11 +150,16 @@ void ordineTopologico(int nodo)
     }
 }
 
+void tagliaCicli(){
+
+
+}
+
 int main(int argc, char** argv)
 {
     leggiGrafo();
-    
     cfc();
+    tagliaCicli();
 
     // Vettore per l'output dei consiglieri
     vector<int> outputCons;
