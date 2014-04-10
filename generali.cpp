@@ -29,7 +29,7 @@ vector<node> grafo;         // grafo di input
 vector<node> trasposto;     // Grafo Trasposto
 stack<int> consiglieri;     // Vettore di consiglieri
 int numeroConsiglieri = 0;  // Numero di consiglieri
-ofstream f("output.txt");
+ofstream of("output.txt");
 stack<int> s;
 vector<bool> v;
 vector<int> ordine;
@@ -50,10 +50,6 @@ int main(int argc, char** argv)
     
     cfc();
     tagliaCicli();
-     
-    
-    
-    
 
     // Vettore per l'output dei consiglieri
     vector<int> outputCons;
@@ -72,14 +68,14 @@ int main(int argc, char** argv)
     
     //cout << "numero consiglieri: " << numeroConsiglieri << endl; //DEBUG
     // Scrive sul file di output il numero dei consiglieri
-    f << numeroConsiglieri << endl;
+    of << numeroConsiglieri << endl;
     
     // Cicla per scrivere sul file di output tutti i consiglieri
     for (int g = 0; g < outputCons.size(); g++)
     {
-        f << outputCons[g] << " ";
+        of << outputCons[g] << " ";
     }
-    f << endl;
+    of << endl;
     numeroConsiglieri = consiglieri.size();
     
     // Cicla sul vettore dei consiglieri, estraendone uno alla volta, e inizia la visita a partire da loro
@@ -89,8 +85,6 @@ int main(int argc, char** argv)
         //cout << "---\n"; //DEBUG
         consiglieri.pop();
     }
-    
-    
     
     return 0;
 }
@@ -207,7 +201,7 @@ void ordineTopologico(int nodo)
             //cout << "nodo: " << nodo << " i: " << grafo[nodo].adiacenti[i] << "\n"; //DEBUG
             if(!grafo[grafo[nodo].adiacenti[i]].visitato)
             {
-                f << nodo << " " << grafo[nodo].adiacenti[i] << endl;
+                of << nodo << " " << grafo[nodo].adiacenti[i] << endl;
                 ordineTopologico(grafo[nodo].adiacenti[i]);
             }
         }
@@ -226,12 +220,12 @@ void tagliaCicli()
 	  
             // Se il nodo i e il vicino j sono nella stessa CFC
             if (grafo[i].cfc == grafo[grafo[i].adiacenti[j]].cfc)
-	      {
+	        {
                 // Riduci il numero di archi entranti
-		  grafo[grafo[i].adiacenti[j]].archiEntranti--;
+		        grafo[grafo[i].adiacenti[j]].archiEntranti--;
                 
                 // Sposta l'ultimo elemento del vettore dei vicini al posto del vicino j
-                grafo[i].adiacenti[grafo[i].adiacenti.size()-1] = grafo[i].adiacenti[j]; //SOSPETTO
+                grafo[i].adiacenti[j] = grafo[i].adiacenti[grafo[i].adiacenti.size()-1];
                 // Elimina l'ultimo elemento
                 grafo[i].adiacenti.pop_back();
                 
