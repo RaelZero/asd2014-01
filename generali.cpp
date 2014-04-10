@@ -99,7 +99,7 @@ int main(int argc, char** argv)
 void leggiGrafo()
 {
     // Importa il numero di nodi e archi
-    ifstream f("DatasetP1/input/input0.txt");
+    ifstream f("input.txt");
     f >> n >> m;
     grafo.resize(n);
     trasposto.resize(n);
