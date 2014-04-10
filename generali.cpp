@@ -30,12 +30,15 @@ vector<node> trasposto;     // Grafo Trasposto
 stack<int> consiglieri;     // Vettore di consiglieri
 int numeroConsiglieri = 0;  // Numero di consiglieri
 ofstream f("output.txt");
-    
+stack<int> s;
+vector<bool> v;
+vector<int> ordine;
+
 // Firme dei metodi
 void leggiGrafo();
 void cfc();
-void dfsStack(stack<int> &s, int nodo, vector<bool> &v);
-void cc(vector<int> &v);
+void dfsStack(int nodo);
+void cc();
 void ccdfs(int componente, int i);
 void ordineTopologico(int nodo);
 void tagliaCicli();
@@ -44,16 +47,13 @@ void tagliaCicli();
 int main(int argc, char** argv)
 {
     leggiGrafo();
-    cfc(); // DA DEBUGGARE, segfaulta
-    // tagliaCicli();
     
-    /*
-    for (int i = 0; i < grafo.size(); i++)
-            cout << "Nodo: " << i << " CC: " << grafo[i].cfc << endl;
-    DEBUG */
+    cfc();
+    tagliaCicli();
+     
     
     
-    /*
+    
 
     // Vettore per l'output dei consiglieri
     vector<int> outputCons;
@@ -90,7 +90,7 @@ int main(int argc, char** argv)
         consiglieri.pop();
     }
     
-    */
+    
     
     return 0;
 }
@@ -126,20 +126,19 @@ void leggiGrafo()
 // Flagga ogni nodo con il numero della sua componente connessa
 void cfc()
 {
-    stack<int> s;
 
     // Crea e inizializza l'array di appoggio per la visita delle CFC
-    vector<bool> v;
     v.resize(n);
     for(int i = 0; i < v.size(); i++)
         v[i] = false;
     
     for(int i = 0; i < grafo.size(); i++)
     {
-        dfsStack(s, i, v);
-    }
 
-    vector<int> ordine;
+      if (v[i] == false)
+        dfsStack(i);
+    }
+    
     ordine.resize(n);
 
     for(int i = 0; i < ordine.size(); i++)
@@ -147,18 +146,19 @@ void cfc()
         ordine[i] = s.top();
         s.pop();
     }
-
-    cc(ordine);
+    
+    cc();
 }
 
 // Funzione ausiliaria per caricare la pila di cfc()
-void dfsStack(stack<int> &s, int nodo, vector<bool> &v)
+void dfsStack(int nodo)
 {
+  v[nodo]=true;
     for (int i = 0; i < ((grafo[nodo]).adiacenti).size(); i++)
     {
         if(!v[((grafo[nodo]).adiacenti[i])])
         {
-            dfsStack(s, grafo[nodo].adiacenti[i], v);
+            dfsStack(grafo[nodo].adiacenti[i]);
         }
     }
     
@@ -166,16 +166,16 @@ void dfsStack(stack<int> &s, int nodo, vector<bool> &v)
 }
 
 // Funzione per le componenti connesse
-void cc(vector<int> &v)
+void cc()
 {
     int numComponente = 0;
 
-    for (int i = 0; i < v.size(); i++)
+    for (int i = 0; i < ordine.size(); i++)
     {
-        if (trasposto[i].cfc == 0)
+        if (trasposto[ordine[i]].cfc == 0)
         {
             numComponente++;
-            ccdfs(numComponente, i);
+            ccdfs(numComponente, ordine[i]);
         }
     }
 }
@@ -223,11 +223,12 @@ void tagliaCicli()
         // Cicla sugli adiacenti al nodo i
         for (int j = 0; j < grafo[i].adiacenti.size(); j++)
         {
+	  
             // Se il nodo i e il vicino j sono nella stessa CFC
             if (grafo[i].cfc == grafo[grafo[i].adiacenti[j]].cfc)
-            {
+	      {
                 // Riduci il numero di archi entranti
-                grafo[grafo[i].adiacenti[j]].archiEntranti--;
+		  grafo[grafo[i].adiacenti[j]].archiEntranti--;
                 
                 // Sposta l'ultimo elemento del vettore dei vicini al posto del vicino j
                 grafo[i].adiacenti[grafo[i].adiacenti.size()-1] = grafo[i].adiacenti[j]; //SOSPETTO
