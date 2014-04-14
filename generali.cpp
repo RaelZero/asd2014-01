@@ -249,7 +249,7 @@ void terzaLegge()
         for(int j=0;j<grafo[i].adiacenti.size();j++)
         {
             
-           if(!grafo[grafo[i].adiacenti[j]].reached)
+           if(!grafo[grafo[i].adiacenti[j]].reached)//controllo se è già raggiunto
             {
                 int currentCFC=grafo[grafo[i].adiacenti[j]].cfc; // la cfc corrente
             
@@ -266,27 +266,26 @@ void terzaLegge()
                             {            
                                 if(perfectPick) // se ho il perfetto rimuovo
                                 {
-                                grafo[grafo[i].adiacenti[k]].archiEntranti--;
-                                grafo[i].adiacenti[k] = grafo[i].adiacenti[grafo[i].adiacenti.size()-1];
-                                grafo[i].adiacenti.pop_back(); 
-                                k--;
+                                        grafo[grafo[i].adiacenti[k]].archiEntranti--;
+                                        grafo[i].adiacenti[k] = grafo[i].adiacenti[grafo[i].adiacenti.size()-1];
+                                        grafo[i].adiacenti.pop_back(); 
+                                        k--;
                                 }
                                 else if(grafo[grafo[i].adiacenti[k]].archiEntranti==1) //nuovo pick perfetto elimino il vecchio;
                                 {
-                                grafo[grafo[i].adiacenti[j]].archiEntranti--;
-                                grafo[i].adiacenti[j] = grafo[i].adiacenti[grafo[i].adiacenti[k]];
-                                grafo[i].adiacenti[k] = grafo[i].adiacenti[grafo[i].adiacenti.size()-1];
-                                grafo[i].adiacenti.pop_back();
-                                perfectPick = true;
-                                k--;
-                           
+                                        grafo[grafo[i].adiacenti[j]].archiEntranti--; //tolgo uno all'elemento non perfetto
+                                        grafo[i].adiacenti[j] = grafo[i].adiacenti[grafo[i].adiacenti[k]]; //rimuovo l'elemento j-esimo non perfetto
+                                        grafo[i].adiacenti[k] = grafo[i].adiacenti[grafo[i].adiacenti.size()-1];//sposto l'ultimo sul k-esimo
+                                        grafo[i].adiacenti.pop_back();
+                                        perfectPick = true;
+                                        k--;
                                 }
                                 else // arco a caso lo rimuovo
                                 {
-                                grafo[grafo[i].adiacenti[k]].archiEntranti--;
-                                grafo[i].adiacenti[k] = grafo[i].adiacenti[grafo[i].adiacenti.size()-1];
-                                grafo[i].adiacenti.pop_back();
-                                k--;
+                                        grafo[grafo[i].adiacenti[k]].archiEntranti--;
+                                        grafo[i].adiacenti[k] = grafo[i].adiacenti[grafo[i].adiacenti.size()-1];
+                                        grafo[i].adiacenti.pop_back();
+                                        k--;
                                 }
                              }
                     
