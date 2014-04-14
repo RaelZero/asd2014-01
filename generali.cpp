@@ -19,6 +19,7 @@ struct node
     vector<int> adiacenti;
     int archiEntranti = 0;
     bool visitato = false;
+    bool reached = false; // Verifica se è già raggiunto nella funzione terzalegge
     int cfc = 0;           // A quale CFC appartiene
 };
 
@@ -42,6 +43,7 @@ void cc();
 void ccdfs(int componente, int i);
 void ordineTopologico(int nodo);
 void tagliaCicli();
+void terzaLegge();
 
 
 int main(int argc, char** argv)
@@ -50,7 +52,7 @@ int main(int argc, char** argv)
     
     cfc();
     tagliaCicli();
-
+    terzaLegge();
     // Vettore per l'output dei consiglieri
     vector<int> outputCons;
 
@@ -234,5 +236,73 @@ void tagliaCicli()
             }
         }
     }
+}
+
+void terzaLegge()
+{//scelgo a caso tanto vale partire dall'inizio
+    for(int i=0;i<grafo.size();i++)
+    {
+        //parto dal primo nodo valido
+        for(int j=0;j<grafo[i].adiacenti.size();j++)
+        {
+            
+            if(!grafo[grafo[i].adiacenti[j]].reached)
+            {
+            int currentCFC=grafo[grafo[i].adiacenti[j]].cfc; // la cfc corrente
+            
+            bool perfectPick = false; //se il pick è su un nodo con 0 archi entranti PROFIT
+            
+            if(grafo[grafo[i].adiacenti[j]].archiEntranti==1)
+                perfectPick = true;     //controllo se il primo è perfetto
+            
+            
+            
+            for(int k=j+1;k<grafo[i].adiacenti.size();k++)//controllo gli elementi successivi
+            {
+                if(grafo[grafo[i].adiacenti[k]].cfc==currentCFC) //i nodi appartengono alla stessa cfc TERZA LEGGE VIOLATA
+                {
+                     // nodo da raggiungere
+                    
+                        if(perfectPick) // se ho il perfetto rimuovo
+                        {
+                           grafo[grafo[i].adiacenti[k]].archiEntranti--;
+                           grafo[i].adiacenti[k] = grafo[i].adiacenti[grafo[i].adiacenti.size()-1];
+                           grafo[i].adiacenti.pop_back(); 
+                        }
+                        else if(grafo[grafo[i].adiacenti[k]].archiEntranti==1) //nuovo pick perfetto elimino il vecchio;
+                        {
+                            grafo[grafo[i].adiacenti[j]].archiEntranti--;
+                            grafo[i].adiacenti[j] = grafo[i].adiacenti[grafo[i].adiacenti[k]];
+                            grafo[i].adiacenti[k] = grafo[i].adiacenti[grafo[i].adiacenti.size()-1];
+                            grafo[i].adiacenti.pop_back();
+                            perfectPick = true;
+                        }
+                        else // arco a caso lo rimuovo
+                        {
+                            grafo[grafo[i].adiacenti[k]].archiEntranti--;
+                            grafo[i].adiacenti[k] = grafo[i].adiacenti[grafo[i].adiacenti.size()-1];
+                            grafo[i].adiacenti.pop_back();
+                        }
+                    
+                    
+                }
+                // ho tenuto un nodo di una cfc lo segno come raggiunto
+                
+                
+           }
+            
+         }
+            else //rimuovo l'arco già raggiunto
+            {
+                grafo[grafo[i].adiacenti[j]].archiEntranti--;
+                grafo[i].adiacenti[j]=grafo[i].adiacenti[grafo[i].adiacenti.size()-1];
+                grafo[i].adiacenti.pop_back();
+                j--;
+            }
+        }
+        
+    }
+    
+    
 }
 
