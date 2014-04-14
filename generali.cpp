@@ -70,11 +70,13 @@ int main(int argc, char** argv)
     
     //cout << "numero consiglieri: " << numeroConsiglieri << endl; //DEBUG
     // Scrive sul file di output il numero dei consiglieri
+    
     of << numeroConsiglieri << endl;
     
     // Cicla per scrivere sul file di output tutti i consiglieri
     for (int g = 0; g < outputCons.size(); g++)
-    {
+    {   
+        
         of << outputCons[g] << " ";
     }
     of << endl;
@@ -203,6 +205,7 @@ void ordineTopologico(int nodo)
             //cout << "nodo: " << nodo << " i: " << grafo[nodo].adiacenti[i] << "\n"; //DEBUG
             if(!grafo[grafo[nodo].adiacenti[i]].visitato)
             {
+                
                 of << nodo << " " << grafo[nodo].adiacenti[i] << endl;
                 ordineTopologico(grafo[nodo].adiacenti[i]);
             }
@@ -250,7 +253,7 @@ void terzaLegge()
             {
             int currentCFC=grafo[grafo[i].adiacenti[j]].cfc; // la cfc corrente
             
-            bool perfectPick = false; //se il pick è su un nodo con 0 archi entranti PROFIT
+            bool perfectPick = false; //se il pick è su un nodo con 1 archi entranti PROFIT
             
             if(grafo[grafo[i].adiacenti[j]].archiEntranti==1)
                 perfectPick = true;     //controllo se il primo è perfetto
@@ -261,7 +264,7 @@ void terzaLegge()
             {
                 if(grafo[grafo[i].adiacenti[k]].cfc==currentCFC) //i nodi appartengono alla stessa cfc TERZA LEGGE VIOLATA
                 {
-                     // nodo da raggiungere
+                     
                     
                         if(perfectPick) // se ho il perfetto rimuovo
                         {
@@ -286,8 +289,8 @@ void terzaLegge()
                     
                     
                 }
-                // ho tenuto un nodo di una cfc lo segno come raggiunto
-                
+                // ho tenuto un nodo di una cfc lo segno come raggiunto per evitare di pickarlo di nuovo
+                grafo[grafo[i].adiacenti[j]].reached = true;
                 
            }
             
@@ -297,7 +300,7 @@ void terzaLegge()
                 grafo[grafo[i].adiacenti[j]].archiEntranti--;
                 grafo[i].adiacenti[j]=grafo[i].adiacenti[grafo[i].adiacenti.size()-1];
                 grafo[i].adiacenti.pop_back();
-                j--;
+                j--; // riporto l'indice alla posizione precedente per controllare quello appena inserito
             }
         }
         
