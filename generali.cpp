@@ -241,7 +241,7 @@ void tagliaCicli()
     }
 }
 
-void terzaLegge()
+void terzaLegge()//PROBLEMI SUL PICK DEL PERFETTO SENZA QUELLO HA FATTO 87.5
 {//scelgo a caso tanto vale partire dall'inizio
     for(int i=0;i<grafo.size();i++)
     {
