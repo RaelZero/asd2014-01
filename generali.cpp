@@ -255,7 +255,7 @@ void terzaLegge()//PROBLEMI SUL PICK DEL PERFETTO SENZA QUELLO HA FATTO 87.5
             
                 bool perfectPick = false; //se il pick è su un nodo con 1 archi entranti PROFIT
             
-                if(grafo[grafo[i].adiacenti[j]].archiEntranti==1)
+                if(grafo[grafo[i].adiacenti[j]].archiEntranti == 1)
                         perfectPick = true;     //controllo se il primo è perfetto
             
             
@@ -264,7 +264,7 @@ void terzaLegge()//PROBLEMI SUL PICK DEL PERFETTO SENZA QUELLO HA FATTO 87.5
                         {
                         if(grafo[grafo[i].adiacenti[k]].cfc==currentCFC) //i nodi appartengono alla stessa cfc TERZA LEGGE VIOLATA
                             {            
-                                if(perfectPick) // se ho il perfetto rimuovo
+                                if(perfectPick) // se ho il pick perfetto rimuovo tutto
                                 {
                                         grafo[grafo[i].adiacenti[k]].archiEntranti--;
                                         grafo[i].adiacenti[k] = grafo[i].adiacenti[grafo[i].adiacenti.size()-1];
@@ -274,7 +274,7 @@ void terzaLegge()//PROBLEMI SUL PICK DEL PERFETTO SENZA QUELLO HA FATTO 87.5
                                 else if(grafo[grafo[i].adiacenti[k]].archiEntranti==1) //nuovo pick perfetto elimino il vecchio;
                                 {
                                         grafo[grafo[i].adiacenti[j]].archiEntranti--; //tolgo uno all'elemento non perfetto
-                                        grafo[i].adiacenti[j] = grafo[i].adiacenti[grafo[i].adiacenti[k]]; //rimuovo l'elemento j-esimo non perfetto
+                                        grafo[i].adiacenti[j] = grafo[i].adiacenti[k]; //rimuovo l'elemento j-esimo non perfetto
                                         grafo[i].adiacenti[k] = grafo[i].adiacenti[grafo[i].adiacenti.size()-1];//sposto l'ultimo sul k-esimo
                                         grafo[i].adiacenti.pop_back();
                                         perfectPick = true;
@@ -294,14 +294,14 @@ void terzaLegge()//PROBLEMI SUL PICK DEL PERFETTO SENZA QUELLO HA FATTO 87.5
            // ho tenuto un nodo di una cfc lo segno come raggiunto per evitare di pickarlo di nuovo
             grafo[grafo[i].adiacenti[j]].reached = true;
             
-                }// endif reached      
+                } //else reached     
                 else //rimuovo l'arco già raggiunto
                 {
                 grafo[grafo[i].adiacenti[j]].archiEntranti--;
                 grafo[i].adiacenti[j]=grafo[i].adiacenti[grafo[i].adiacenti.size()-1];
                 grafo[i].adiacenti.pop_back();
                 j--; // riporto l'indice alla posizione precedente per controllare quello appena inserito
-                }
+                }// endif reached
        }//endfor j
         
     }//endfor i
