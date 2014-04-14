@@ -251,62 +251,61 @@ void terzaLegge()
             
            if(!grafo[grafo[i].adiacenti[j]].reached)
             {
-            int currentCFC=grafo[grafo[i].adiacenti[j]].cfc; // la cfc corrente
+                int currentCFC=grafo[grafo[i].adiacenti[j]].cfc; // la cfc corrente
             
-           bool perfectPick = false; //se il pick è su un nodo con 1 archi entranti PROFIT
+                bool perfectPick = false; //se il pick è su un nodo con 1 archi entranti PROFIT
             
-          if(grafo[grafo[i].adiacenti[j]].archiEntranti==1)
-               perfectPick = true;     //controllo se il primo è perfetto
+                if(grafo[grafo[i].adiacenti[j]].archiEntranti==1)
+                        perfectPick = true;     //controllo se il primo è perfetto
             
             
             
-            for(int k=j+1;k<grafo[i].adiacenti.size();k++)//controllo gli elementi successivi
-            {
-                if(grafo[grafo[i].adiacenti[k]].cfc==currentCFC) //i nodi appartengono alla stessa cfc TERZA LEGGE VIOLATA
-                {
-                     
-                    
-                      if(perfectPick) // se ho il perfetto rimuovo
-                     {
-                         grafo[grafo[i].adiacenti[k]].archiEntranti--;
-                         grafo[i].adiacenti[k] = grafo[i].adiacenti[grafo[i].adiacenti.size()-1];
-                         grafo[i].adiacenti.pop_back(); 
-                         k--;
-                      }
-                      else if(grafo[grafo[i].adiacenti[k]].archiEntranti==1) //nuovo pick perfetto elimino il vecchio;
-                      {
-                          grafo[grafo[i].adiacenti[j]].archiEntranti--;
-                          grafo[i].adiacenti[j] = grafo[i].adiacenti[grafo[i].adiacenti[k]];
-                          grafo[i].adiacenti[k] = grafo[i].adiacenti[grafo[i].adiacenti.size()-1];
-                          grafo[i].adiacenti.pop_back();
-                          perfectPick = true;
-                          k--;
-                           
-                       }
-                      else // arco a caso lo rimuovo
+                 for(int k=j+1;k<grafo[i].adiacenti.size();k++)//controllo gli elementi successivi
                         {
-                            grafo[grafo[i].adiacenti[k]].archiEntranti--;
-                            grafo[i].adiacenti[k] = grafo[i].adiacenti[grafo[i].adiacenti.size()-1];
-                            grafo[i].adiacenti.pop_back();
-                            k--;
-                        }
-                }
+                        if(grafo[grafo[i].adiacenti[k]].cfc==currentCFC) //i nodi appartengono alla stessa cfc TERZA LEGGE VIOLATA
+                            {            
+                                if(perfectPick) // se ho il perfetto rimuovo
+                                {
+                                grafo[grafo[i].adiacenti[k]].archiEntranti--;
+                                grafo[i].adiacenti[k] = grafo[i].adiacenti[grafo[i].adiacenti.size()-1];
+                                grafo[i].adiacenti.pop_back(); 
+                                k--;
+                                }
+                                else if(grafo[grafo[i].adiacenti[k]].archiEntranti==1) //nuovo pick perfetto elimino il vecchio;
+                                {
+                                grafo[grafo[i].adiacenti[j]].archiEntranti--;
+                                grafo[i].adiacenti[j] = grafo[i].adiacenti[grafo[i].adiacenti[k]];
+                                grafo[i].adiacenti[k] = grafo[i].adiacenti[grafo[i].adiacenti.size()-1];
+                                grafo[i].adiacenti.pop_back();
+                                perfectPick = true;
+                                k--;
+                           
+                                }
+                                else // arco a caso lo rimuovo
+                                {
+                                grafo[grafo[i].adiacenti[k]].archiEntranti--;
+                                grafo[i].adiacenti[k] = grafo[i].adiacenti[grafo[i].adiacenti.size()-1];
+                                grafo[i].adiacenti.pop_back();
+                                k--;
+                                }
+                             }
                     
-           }
+                        }//endfor k
+                
            // ho tenuto un nodo di una cfc lo segno come raggiunto per evitare di pickarlo di nuovo
             grafo[grafo[i].adiacenti[j]].reached = true;
-            //endfor k
-         }
-            else //rimuovo l'arco già raggiunto
-            {
+            
+                }// endif reached      
+                else //rimuovo l'arco già raggiunto
+                {
                 grafo[grafo[i].adiacenti[j]].archiEntranti--;
                 grafo[i].adiacenti[j]=grafo[i].adiacenti[grafo[i].adiacenti.size()-1];
                 grafo[i].adiacenti.pop_back();
                 j--; // riporto l'indice alla posizione precedente per controllare quello appena inserito
-            }
-       }
+                }
+       }//endfor j
         
-    }
+    }//endfor i
     
     
 }
